@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" source="mansion.tsx"/>
+ <tileset firstgid="101" source="mansion2.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="10" height="10">
+  <data encoding="csv">
+101,101,101,101,101,101,101,101,101,101,
+101,101,101,101,101,101,101,101,101,101,
+101,101,112,113,113,114,113,113,115,101,
+101,101,122,123,123,124,123,123,125,101,
+101,101,132,133,133,133,133,133,135,101,
+101,101,131,133,133,133,133,133,121,101,
+101,101,131,133,133,133,133,133,121,101,
+101,101,131,133,133,133,133,133,121,101,
+101,101,142,143,143,143,143,143,145,101,
+101,101,101,101,101,101,101,101,101,101
+</data>
+ </layer>
+</map>

@@ -1,0 +1,49 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "mansion2-v2.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "mansion-v2.tmx": {
+            "scale": 0.7540625,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 480.066307501036,
+                "y": 480.0663075010361
+            }
+        },
+        "mansion2-v2.tmx": {
+            "scale": 1.13109375,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 302.3622047244094,
+                "y": 321.8124050283188
+            }
+        },
+        "mansion2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "map.height": 10,
+    "map.lastUsedFormat": "tmx",
+    "map.renderOrder": null,
+    "map.width": 10,
+    "openFiles": [
+        "mansion-v2.tmx",
+        "mansion2.tsx",
+        "mansion2-v2.tmx"
+    ],
+    "project": "game.tiled-project",
+    "property.type": "object",
+    "recentFiles": [
+        "mansion-v2.tmx",
+        "mansion2.tsx",
+        "mansion2-v2.tmx"
+    ]
+}
