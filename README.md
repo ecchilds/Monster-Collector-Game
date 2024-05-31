@@ -1,5 +1,5 @@
 # Monster Collector Video Game Project
-This game is a work-in-progress utilizing the [LibGDX game engine](https://libgdx.com/).
+This game is a work-in-progress utilizing the [LibGDX game engine](https://libgdx.com/). Do note that only the desktop version of the app is currently configured and expected to run correctly.
 
 ## Credits
 ### Sound Effects
