@@ -70,8 +70,6 @@ abstract public class Creature extends VisibleEntity implements Telegraph {
         FixtureBuilder.buildCircle(body, radius, density, friction);
         body.setLinearDamping(getDefaultDamping());
 
-        addCollisionListener(Item.class, (Entity source) -> {  });
-
         walkingAnimations = new EnumMap<>(Direction.class);
     }
 

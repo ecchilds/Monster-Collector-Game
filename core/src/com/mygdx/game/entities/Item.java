@@ -37,10 +37,8 @@ abstract public class Item extends VisibleEntity {
         return idleSprites.get(Direction.DOWN);
     }
 
-    //for testing
     @Override
     public void handleCollision(Entity entity) {
         super.handleCollision(entity);
-        System.out.println("BREAK HERE");
     }
 }

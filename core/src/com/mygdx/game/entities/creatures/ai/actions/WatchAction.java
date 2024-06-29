@@ -1,25 +1,23 @@
 package com.mygdx.game.entities.creatures.ai.actions;
 
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.creatures.Mob;
 import com.mygdx.game.entities.creatures.ai.BodyLocation;
-import com.mygdx.game.entities.creatures.ai.VoidFunction;
 
-public class WatchAction extends LeafAction implements ActionUsesTarget<BodyLocation> {
+public class WatchAction extends BehaviorTreeAction implements ActionUsesTarget {
 
     private float timeToLive;
     private float timeLived = 0;
-    private BodyLocation target;
+    private BodyLocation targetBody;
+    private Entity target;
 
-    public WatchAction(Mob owner, VoidFunction endedFunction) {
-        this(owner, endedFunction, 7);
+    public WatchAction(Mob owner) {
+        this(owner, 7);
     }
 
-    public WatchAction(Mob owner, VoidFunction endedFunction, float timeToLive) {
-        super(owner, endedFunction);
-
-        target = new BodyLocation(owner.getTarget().getBody());
-
+    public WatchAction(Mob owner, float timeToLive) {
+        super(owner);
         this.timeToLive = timeToLive;
     }
 
@@ -28,7 +26,7 @@ public class WatchAction extends LeafAction implements ActionUsesTarget<BodyLoca
         timeLived += delta;
 
         if(timeLived < timeToLive) {
-            Vector2 targetPosition = target.getPosition();
+            Vector2 targetPosition = targetBody.getPosition();
             owner.setOrientation((float)Math.atan2(-(targetPosition.x - owner.getX()), targetPosition.y - owner.getY()));
         } else {
             end();
@@ -41,7 +39,6 @@ public class WatchAction extends LeafAction implements ActionUsesTarget<BodyLoca
     @Override
     public void reset() {
         super.reset();
-        target = new BodyLocation(owner.getTarget().getBody());
         timeLived = 0;
     }
 
@@ -50,12 +47,13 @@ public class WatchAction extends LeafAction implements ActionUsesTarget<BodyLoca
     }
 
     @Override
-    public BodyLocation getTarget() {
+    public Entity getTarget() {
         return target;
     }
 
     @Override
-    public void setTarget(BodyLocation target) {
+    public void setTarget(Entity target) {
         this.target = target;
+        targetBody = new BodyLocation(target.getBody());
     }
 }

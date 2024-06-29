@@ -6,101 +6,77 @@ import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.Item;
 import com.mygdx.game.entities.creatures.Creature;
 import com.mygdx.game.entities.creatures.Eyeball;
+import com.mygdx.game.entities.creatures.Player;
 import com.mygdx.game.entities.creatures.ai.MobAI;
-import com.mygdx.game.entities.creatures.ai.actions.Action;
-import com.mygdx.game.entities.creatures.ai.actions.PursueAction;
-import com.mygdx.game.entities.creatures.ai.actions.WanderAction;
-import com.mygdx.game.entities.creatures.ai.actions.WatchAction;
+import com.mygdx.game.entities.creatures.ai.actions.*;
 import com.mygdx.game.entities.utils.MessageTypes;
+
+import java.util.List;
 
 public enum EyeballState implements State<Eyeball, EyeballState> {
 
     WANDER() {
 
         @Override
-        public void enter(Eyeball mob) {
-        }
-
-        //TODO: debug this shit. for whatever reason, mob will only see the apple the first time. and never again.
-        @Override
-        public void reEnter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action) {
+        public void enter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action, List<Entity> targets) {
             addAppleObservationListener(mob, ai);
         }
 
         @Override
         public Action newInstance(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
-            addAppleObservationListener(mob, ai);
             return new WanderAction(mob);
         }
 
         @Override
-        public void exit(Eyeball mob) {
+        public void exit(Eyeball mob, Action action) {
             mob.removeObservationListener(Apple.class);
         }
 
         private void addAppleObservationListener(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
             mob.addObservationListener(Apple.class, (apple) -> {
-                mob.setTarget(apple);
-                PursueAction pursueAction = (PursueAction) ai.changeState(PURSUE_ITEM);
-                pursueAction.appendToEndedFunction(() -> {
-                    ai.changeState(WANDER);
-                });
+                ai.changeState(PURSUE_ITEM, 1, List.of(apple));
             });
         }
-
-//        @Override
-//        public void handleMessage(Telegram telegram, Eyeball Mob, MobAI<Eyeball, EyeballState> ai) {
-//            switch(telegram.message) {
-//                case ()
-//            }
-//        }
     },
 
-    WATCH() {
+    WATCH_PLAYER() {
+
         @Override
-        public void enter(Eyeball mob) {
-            Entity target = mob.getTarget();
+        public void enter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action, List<Entity> targets) {
+            Entity target = targets.get(0);
             if (target instanceof Creature) {
                 ((Creature) target).addWatcher(mob);
             }
-        }
-
-        @Override
-        public void reEnter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action) {
-            ((WatchAction) action).reset();
-            ((WatchAction) action).setTimeToLive(2);
-            enter(mob);
+            var watchAction = (WatchAction)((StateTransitionActionWrapper<?>)action).getWrapped();
+            watchAction.setTarget(target);
         }
 
         @Override
         public Action newInstance(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
-            return new WatchAction(mob, () -> ai.changeState(WANDER));
+            return new StateTransitionActionWrapper<>(mob, ai, ai.getDefaultState(), 1, new WatchAction(mob));
         }
 
         @Override
-        public void exit(Eyeball mob) {
-            Entity target = mob.getTarget();
+        public void exit(Eyeball mob, Action action) {
+            var wrapper = (StateTransitionActionWrapper<?>)action;
+            wrapper.reset();
+
+            var watchAction = (WatchAction)wrapper.getWrapped();
+            Entity target = watchAction.getTarget();
             if (target instanceof Creature) {
                 ((Creature) target).removeWatcher(mob);
             }
+            watchAction.setTimeToLive(2);
         }
 
         @Override
         public void handleMessage(Telegram telegram, Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
             switch (telegram.message) {
                 case (MessageTypes.ROOM_CHANGE):
-                    ai.revertState();
+                    ai.changeState(ai.getDefaultState(), 1);
                     break;
                 case (MessageTypes.ITEM_DROPPED):
-                    Entity whoDropped = mob.getTarget();
-                    // setting the target before changing state lets the createInstance function in
-                    // PURSUE set the action's target for us, using the mob's target.
-                    mob.setTarget((Entity) telegram.extraInfo);
-                    PursueAction pursueAction = (PursueAction)ai.changeState(PURSUE_ITEM);
-                    pursueAction.appendToEndedFunction(() -> {
-                        mob.setTarget(whoDropped);
-                        ai.changeState(WATCH);
-                    });
+                    ai.changeState(PURSUE_ITEM_FROM_PLAYER, 4, List.of((Entity)telegram.extraInfo, (Player)telegram.sender));
                     break;
                 default:
             }
@@ -108,32 +84,45 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
     },
 
     PURSUE_ITEM() {
-        @Override
-        public void enter(Eyeball mob) {
-
-        }
 
         @Override
-        public void reEnter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action) {
-            ((PursueAction) action).setTarget(mob.getTarget());
+        public void enter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action, List<Entity> targets) {
+            var pursueAction = (PursueAction)((StateTransitionActionWrapper<?>)action).getWrapped();
+            pursueAction.setTarget(targets.get(0));
         }
 
         @Override
         public Action newInstance(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
-            return new PursueAction(mob, () -> {
-                ((Item)mob.getTarget()).pickUp();
-                // this line will have to be prepended by the state that switches into this, in order to allow for customizeable state transitions
-                //ai.changeState(WANDER);
-            });
+            return new StateTransitionActionWrapper<>(mob, ai, WANDER, 1, new PursueAction(mob, (Entity target) -> {
+                ((Item)target).pickUp();
+            }));
         }
 
         @Override
-        public void exit(Eyeball mob) {
+        public void exit(Eyeball mob, Action action) {
+            ((StateTransitionActionWrapper<?>)action).reset();
+        }
+    },
 
+    PURSUE_ITEM_FROM_PLAYER() {
+
+        @Override
+        public void enter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action, List<Entity> targets) {
+            var actionSequence = (ActionSequence)((StateTransitionActionWrapper<?>) action).getWrapped();
+            actionSequence.setTargets(targets);
+        }
+
+        @Override
+        public Action newInstance(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
+            return new StateTransitionActionWrapper<>(mob, ai, ai.getDefaultState(), 1, new ActionSequence(mob,
+                    new PursueAction(mob, (Entity target) -> ((Item)target).pickUp()),
+                    new WatchAction(mob, 2)
+            ));
+        }
+
+        @Override
+        public void exit(Eyeball mob, Action action) {
+            ((StateTransitionActionWrapper<?>)action).reset();
         }
     };
-
-    public void reEnter(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
-
-    }
 }

@@ -13,6 +13,7 @@ import com.mygdx.game.entities.creatures.ai.MobAI;
 import com.mygdx.game.entities.creatures.ai.ObservationListener;
 import com.mygdx.game.entities.creatures.ai.Observer;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +30,7 @@ public class Eyeball extends Mob implements Observer {
         generateDetectionFixture();
         addObservationListener(Player.class, (Entity e) -> {
             this.setTarget(e);
-            ai.changeState(EyeballState.WATCH);
+            ai.changeState(EyeballState.WATCH_PLAYER, 4, List.of(e));
         });
 
         setMaxLinearSpeed(.5f);

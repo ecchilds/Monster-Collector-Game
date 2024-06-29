@@ -1,8 +1,10 @@
 package com.mygdx.game.entities.creatures.ai.actions;
 
-public interface ActionUsesTarget<T>  {
+import com.mygdx.game.entities.Entity;
 
-    T getTarget();
+public interface ActionUsesTarget  {
 
-    void setTarget(T target);
+    Entity getTarget();
+
+    void setTarget(Entity target);
 }

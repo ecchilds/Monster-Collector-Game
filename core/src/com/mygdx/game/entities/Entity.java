@@ -46,11 +46,7 @@ public abstract class Entity {
     }
 
     public void handleCollision(Entity entity) {
-        Optional<Class<?>> clazzKey = collisionListeners.keySet().stream().filter((Class<?> clazz) -> clazz.isAssignableFrom(entity.getClass())).findFirst();
-        if (clazzKey.isPresent()) {
-            EntityCollisionListener listener = collisionListeners.get(clazzKey.get());
-            listener.run(entity);
-        }
+        collisionListeners.entrySet().stream().filter((entry) -> entry.getKey().isAssignableFrom(entity.getClass())).forEach(entry -> entry.getValue().run(entity));
     }
 
     public float getImpulseSpeed() {

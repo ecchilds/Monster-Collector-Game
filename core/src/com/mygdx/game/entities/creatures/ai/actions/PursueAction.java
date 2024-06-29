@@ -5,24 +5,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.creatures.Mob;
 import com.mygdx.game.entities.creatures.ai.BodyLocation;
-import com.mygdx.game.entities.creatures.ai.VoidFunction;
+import com.mygdx.game.entities.utils.EntityCollisionListener;
 
-public class PursueAction extends LeafAction implements ActionUsesTarget<Entity> {
+public class PursueAction extends BehaviorTreeAction implements ActionUsesTarget {
 
     Entity target;
-    Seek<Vector2> seekBehavior;
+    Seek<Vector2> seekBehavior = null;
+    EntityCollisionListener collisionListener;
 
-    public PursueAction(Mob owner, VoidFunction endedFunction) {
-        this(owner, endedFunction, owner.getTarget());
-    }
-
-    public PursueAction(Mob owner, VoidFunction endedFunction, Entity target) {
-        super(owner, endedFunction);
-        this.target = target;
-        seekBehavior = new Seek<>(owner, new BodyLocation(target.getBody()));
-        target.addCollisionListener(owner.getClass(), (ownerInListener) -> {
-            end();
-        });
+    public PursueAction(Mob owner, EntityCollisionListener collisionListener) {
+        super(owner);
+        this.collisionListener = collisionListener;
     }
 
     @Override
@@ -33,8 +26,13 @@ public class PursueAction extends LeafAction implements ActionUsesTarget<Entity>
     @Override
     public void setTarget(Entity target) {
         this.target = target;
-        seekBehavior.setTarget(new BodyLocation(target.getBody()));
-        target.addCollisionListener(owner.getClass(), (ownerInListener) -> {
+        if (seekBehavior == null) {
+            seekBehavior = new Seek<>(owner, new BodyLocation(target.getBody()));
+        } else {
+            seekBehavior.setTarget(new BodyLocation(target.getBody()));
+        }
+        owner.addCollisionListener(target.getClass(), (targetInListener) -> {
+            collisionListener.run(targetInListener);
             end();
         });
     }
