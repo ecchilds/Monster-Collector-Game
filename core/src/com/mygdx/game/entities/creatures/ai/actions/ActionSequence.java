@@ -1,6 +1,7 @@
 package com.mygdx.game.entities.creatures.ai.actions;
 
 import com.mygdx.game.entities.creatures.Mob;
+import com.mygdx.game.entities.creatures.ai.ActionStatus;
 
 public class ActionSequence extends BranchAction {
 
@@ -16,17 +17,20 @@ public class ActionSequence extends BranchAction {
     public void update(float delta) {
         var action = actions.get(index);
         action.update(delta);
-        if (action.isEnded()) {
+
+        if (action.getStatus() == ActionStatus.FAILED) {
+            end(false);
+        } else if (action.isEnded()) {
             index++;
-            if(index >= numberOfActions) {
-                end();
+            if (index >= numberOfActions) {
+                end(true);
             }
         }
     }
 
     @Override
-    public void reset() {
-        super.reset();
+    public void resetAndSleep() {
+        super.resetAndSleep();
         index = 0;
     }
 }

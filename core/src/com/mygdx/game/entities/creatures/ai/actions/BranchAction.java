@@ -15,10 +15,18 @@ public abstract class BranchAction extends BehaviorTreeAction {
     }
 
     @Override
-    public void reset() {
-        ended = false;
+    public void start() {
+        super.start();
         for (var action : actions) {
-            action.reset();
+            action.start();
+        }
+    }
+
+    @Override
+    public void resetAndSleep() {
+        super.resetAndSleep();
+        for (var action : actions) {
+            action.resetAndSleep();
         }
     }
 

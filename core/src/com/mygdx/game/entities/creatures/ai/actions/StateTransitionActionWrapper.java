@@ -26,13 +26,20 @@ public class StateTransitionActionWrapper<S extends Enum<S> & State<?, S>> exten
         wrapped.update(delta);
         if (wrapped.isEnded()) {
             ai.changeState(state, statePriority);
+            end(true);
         }
     }
 
     @Override
-    public void reset() {
-        super.reset();
-        wrapped.reset();
+    public void start() {
+        super.start();
+        wrapped.start();
+    }
+
+    @Override
+    public void resetAndSleep() {
+        super.resetAndSleep();
+        wrapped.resetAndSleep();
     }
 
     public void setNextState(S state, int statePriority) {

@@ -29,16 +29,16 @@ public class WatchAction extends BehaviorTreeAction implements ActionUsesTarget 
             Vector2 targetPosition = targetBody.getPosition();
             owner.setOrientation((float)Math.atan2(-(targetPosition.x - owner.getX()), targetPosition.y - owner.getY()));
         } else {
-            end();
+            end(true);
         }
     }
 
     /**
-     * Update target and reset "time lived" counter.
+     * Reset "time lived" counter.
      */
     @Override
-    public void reset() {
-        super.reset();
+    public void resetAndSleep() {
+        super.resetAndSleep();
         timeLived = 0;
     }
 
