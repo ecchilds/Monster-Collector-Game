@@ -55,8 +55,6 @@ public class GameUI {
         windows = new WindowGroup(style, "window");
         windows.setFillParent(true);
         overlayAndWindows.add(windows);
-
-//        stage.setDebugAll(true);
     }
 
     public static void render(float delta) {

@@ -29,11 +29,6 @@ public class GameScreen implements Screen {
 
     SpriteBatch batch;
     private OrthographicCamera camera;
-//    private Viewport viewport;
-//    private Stage ui;
-//    private Table mainUi;
-//    private Stack uiAndWindows;
-//    private Skin style;
 
     // meters on screen
     private static final float SCREEN_METERS = 25f;
@@ -46,37 +41,7 @@ public class GameScreen implements Screen {
 
         // scene2d ui
         GameUI.init(batch);
-//        viewport = new FitViewport(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
-//        ui = new Stage(viewport, batch);
-//        mainUi = new Table();
-//        mainUi.setFillParent(true);
-//        uiAndWindows = new Stack(mainUi);
-//        uiAndWindows.setFillParent(true);
-//        ui.setRoot(uiAndWindows);
-//
-//        BitmapFont font = new BitmapFont(Gdx.files.internal("fonts/teletactile2.fnt"), Gdx.files.internal("fonts/teletactile2.png"), false);
-//        style = new Skin();
-//        style.add("mainFont", font);
-//        Label label = new Label("GAPY", style, "mainFont", Color.WHITE);
-//
-//        //mainUi.add(label);
-//        //mainUi.left().top();
-//
-//        // windows
-//        Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGB565);
-//        bgPixmap.setColor(Color.DARK_GRAY);
-//        bgPixmap.fill();
-//        TextureRegionDrawable textureRegionDrawableBg = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
-//
-//        Window.WindowStyle windowStyle = new Window.WindowStyle();
-//        windowStyle.titleFont = font;
-//        windowStyle.titleFontColor = Color.WHITE;
-//        windowStyle.background = textureRegionDrawableBg;
-//        style.add("window", windowStyle, Window.WindowStyle.class);
-//
-//        WindowGroup windowStack = new WindowGroup(style, "window");
-//        windowStack.setFillParent(true);
-//        uiAndWindows.add(windowStack);
+
 
         // physics engine
         Box2D.init();
@@ -116,7 +81,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        //viewport.update(width, height);
+
     }
 
     @Override

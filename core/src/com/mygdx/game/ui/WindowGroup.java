@@ -21,8 +21,8 @@ public class WindowGroup extends WidgetGroup {
         if (testWindow == null) {
             testWindow = new WindowModal("testwindow", skin, styleName);
             addActor(testWindow);
-            //testWindow.setX(getWidth()/2);
-            //testWindow.setY(getHeight()/2);
+            testWindow.setX(getWidth()/2);
+            testWindow.setY(getHeight()/2);
         } else {
             testWindow.toggleVisible();
             testWindow.toFront();
