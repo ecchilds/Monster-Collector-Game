@@ -66,7 +66,7 @@ public class GameUI {
         return stage;
     }
 
-    public static void toggleTestWindow() {
-        windows.toggleTestWindow();
+    public static WindowGroup getWindows() {
+        return windows;
     }
 }

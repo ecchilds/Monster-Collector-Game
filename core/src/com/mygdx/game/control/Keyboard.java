@@ -39,11 +39,15 @@ public class Keyboard implements CharacterController {
 
     @Override
     public boolean keyUp(int keycode) {
-        if (keycode == Input.Keys.I) {
-            GameUI.toggleTestWindow();
-            return true;
-        } else {
-            return player.handleKeyRelease(keycode);
+        switch (keycode) {
+            case (Input.Keys.I):
+                GameUI.getWindows().toggleTestWindow();
+                return true;
+            case (Input.Keys.ESCAPE):
+                GameUI.getWindows().toggleUpperMostWindow();
+                return true;
+            default:
+                return player.handleKeyRelease(keycode);
         }
     }
 
