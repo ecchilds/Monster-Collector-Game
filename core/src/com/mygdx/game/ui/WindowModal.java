@@ -1,17 +1,26 @@
 package com.mygdx.game.ui;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 
+import java.util.List;
+
 public class WindowModal extends Window {
 
     private TextButton closeButton;
+    private static final List<Integer> MAPPED_KEYS = List.of(
+            Input.Keys.UP,
+            Input.Keys.DOWN,
+            Input.Keys.ENTER
+    );
 
     public WindowModal(String title, Skin skin, String styleName) {
         super(title, skin, styleName);
@@ -53,5 +62,18 @@ public class WindowModal extends Window {
     public void toggleVisible() {
         setVisible(!isVisible());
         getStage().unfocus(this);
+    }
+
+    @Override
+    public boolean notify(Event event, boolean capture) {
+        if (event instanceof InputEvent inputEvent) {
+            if ((inputEvent.getType() != InputEvent.Type.keyUp && inputEvent.getType() != InputEvent.Type.keyTyped && inputEvent.getType() != InputEvent.Type.keyDown) || MAPPED_KEYS.contains(inputEvent.getKeyCode())) {
+                return super.notify(event, capture);
+            } else {
+                return event.isCancelled();
+            }
+        } else {
+            return super.notify(event, capture);
+        }
     }
 }
