@@ -4,10 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.mygdx.game.entities.creatures.Player;
+import com.mygdx.game.ui.GameUI;
 
 public class Keyboard implements CharacterController {
 
-    private Player player;
+    private final Player player;
 
     public Keyboard(Player player) {
         this.player = player;
@@ -38,7 +39,12 @@ public class Keyboard implements CharacterController {
 
     @Override
     public boolean keyUp(int keycode) {
-        return player.handleKeyRelease(keycode);
+        if (keycode == Input.Keys.I) {
+            GameUI.toggleTestWindow();
+            return true;
+        } else {
+            return player.handleKeyRelease(keycode);
+        }
     }
 
     @Override

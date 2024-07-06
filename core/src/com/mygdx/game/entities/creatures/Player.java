@@ -1,6 +1,5 @@
 package com.mygdx.game.entities.creatures;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.ai.msg.Telegram;
@@ -24,7 +23,6 @@ public class Player extends Creature {
         super("hoodie", world, x, y, 0.25f, 1f, 0.5f);
 
         controller = new Keyboard(this);
-        Gdx.input.setInputProcessor(controller);
 
         body.setLinearDamping(getDefaultDamping());
         setImpulseSpeed(0.15f);
@@ -99,7 +97,11 @@ public class Player extends Creature {
         return false;
     }
 
-//    @Override
+    public CharacterController getController() {
+        return controller;
+    }
+
+    //    @Override
 //    public void draw(Batch batch, float delta) {
 //        Vector2 pos = body.getPosition();
 //        batch.draw(getCurrentSprite(delta), pos.x - 0.5f, pos.y - 0.2f, 1f, 1f);
