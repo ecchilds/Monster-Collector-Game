@@ -68,6 +68,11 @@ public class Keyboard implements CharacterController {
     }
 
     @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }

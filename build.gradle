@@ -23,12 +23,12 @@ allprojects {
     version = '1.0'
     ext {
         appName = "My GDX Game"
-        gdxVersion = '1.10.0'
-        roboVMVersion = '2.3.16'
+        gdxVersion = '1.12.1'
+        roboVMVersion = '2.3.20'
         box2DLightsVersion = '1.5'
-        ashleyVersion = '1.7.4'
         aiVersion = '1.8.2'
-        gdxControllersVersion = '2.2.1'
+        gdxControllersVersion = '2.2.3'
+        cuversion = '2.1.1'
     }
 
     repositories {
@@ -65,8 +65,7 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
-        api "com.badlogicgames.ashley:ashley:$ashleyVersion"
-        
+        implementation "de.golfgl.gdxcontrollerutils:gdx-controllerutils-scene2d:$cuversion"
     }
 }
 
@@ -98,6 +97,7 @@ project(":html") {
         implementation project(":core")
         implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion:sources"
         implementation "com.badlogicgames.gdx:gdx-box2d-gwt:$gdxVersion:sources"
+        implementation "de.golfgl.gdxcontrollerutils:gdx-controllerutils-scene2d:$cuversion:sources"
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
@@ -105,7 +105,5 @@ project(":html") {
         api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion:sources"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-gwt:$gdxControllersVersion"
         api "com.badlogicgames.gdx-controllers:gdx-controllers-gwt:$gdxControllersVersion:sources"
-        api "com.badlogicgames.ashley:ashley:$ashleyVersion:sources"
-        
     }
 }
