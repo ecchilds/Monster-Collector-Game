@@ -41,43 +41,34 @@ public class MobAI<M extends Mob, S extends Enum<S> & State<M, S>> {
         initialState.enter(owner, this, newAction, List.of());
     }
 
-    private boolean changeStateInternal(S newState, int priority) {
+    private boolean changeStateInternal(S newState, int priority, List<Entity> targets) {
         if (nextState == null || priority > nextStatePriority) {
             nextState = newState;
             nextStatePriority = priority;
+            nextStateTargets = targets;
             return true;
         }
         return false;
     }
 
     public void changeState(S newState, int priority) {
-        if(changeStateInternal(newState, priority)) {
-            nextStateTargets = List.of();
-        }
+        changeStateInternal(newState, priority, List.of());
     }
 
     public void changeState(S newState, int priority, List<Entity> targets) {
-        if (changeStateInternal(newState, priority)) {
-            nextStateTargets = targets;
-        }
+        changeStateInternal(newState, priority, targets);
     }
 
     public <A extends Action> A changeStateAndPreloadAction(S newState, int priority, Class<A> clazz) {
-        if (changeStateInternal(newState, priority)) {
-            nextStateTargets = List.of();
-            return clazz.cast(actions.getOrDefault(newState, newState.newInstance(owner, this)));
-        }
-        return null;
+        return changeStateAndPreloadAction(newState, priority, List.of(), clazz);
     }
 
     public <A extends Action> A changeStateAndPreloadAction(S newState, int priority, List<Entity> targets, Class<A> clazz) {
-        if (changeStateInternal(newState, priority)) {
-            nextStateTargets = targets;
+        if (changeStateInternal(newState, priority, targets)) {
             return clazz.cast(actions.computeIfAbsent(newState, state -> state.newInstance(owner, this)));
         }
         return null;
     }
-    // TODO: deduplicate code
 
     public void update(float delta) {
         if (nextState != null && nextState != currentState) {
