@@ -41,12 +41,16 @@ public abstract class Entity {
         this.body.setUserData(this);
     }
 
-    public <T extends Entity> void addCollisionListener(Class<T> clazz, EntityCollisionListener listener) {
+    public void addCollisionListener(Class<? extends Entity> clazz, EntityCollisionListener listener) {
         collisionListeners.put(clazz, listener);
     }
 
     public void handleCollision(Entity entity) {
         collisionListeners.entrySet().stream().filter((entry) -> entry.getKey().isAssignableFrom(entity.getClass())).forEach(entry -> entry.getValue().run(entity));
+    }
+
+    public void removeCollisionListener(Class<? extends Entity> clazz) {
+        collisionListeners.remove(clazz);
     }
 
     public float getImpulseSpeed() {

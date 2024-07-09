@@ -15,7 +15,7 @@ import com.mygdx.game.entities.*;
 import com.mygdx.game.entities.creatures.Creature;
 import com.mygdx.game.entities.creatures.Eyeball;
 import com.mygdx.game.entities.creatures.Mob;
-import com.mygdx.game.entities.creatures.ai.Observer;
+import com.mygdx.game.entities.utils.Observer;
 import com.mygdx.game.entities.props.Door;
 import com.mygdx.game.entities.utils.FixtureBuilder;
 

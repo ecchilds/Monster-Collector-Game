@@ -76,7 +76,7 @@ public class Door extends Prop {
             GameWorld.movePlayerToRoom(destination);
         });
         this.addCollisionListener(Mob.class, (Entity e) -> {
-            GameWorld.moveCreatureToRoom(((Mob)e), source, destination);
+            GameWorld.moveCreatureToRoom((Mob)e, source, destination);
         });
 
         this.putIdleSprite(Direction.DOWN, "prop-doorway.png");

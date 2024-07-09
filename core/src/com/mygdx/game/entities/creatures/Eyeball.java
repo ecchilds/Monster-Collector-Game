@@ -10,8 +10,8 @@ import com.mygdx.game.Room;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.creatures.ai.state.EyeballState;
 import com.mygdx.game.entities.creatures.ai.MobAI;
-import com.mygdx.game.entities.creatures.ai.ObservationListener;
-import com.mygdx.game.entities.creatures.ai.Observer;
+import com.mygdx.game.entities.utils.Observer;
+import com.mygdx.game.entities.utils.EntityCollisionListener;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Eyeball extends Mob implements Observer {
 
-    Map<Class<?>, ObservationListener> observationListeners = new ConcurrentHashMap<>();
+    Map<Class<? extends Entity>, EntityCollisionListener> observationListeners = new ConcurrentHashMap<>();
     MobAI<Eyeball, EyeballState> ai = new MobAI<>(this, EyeballState.WANDER, EyeballState.class);
     //VisionCone visionCone = new VisionCone(this, 2, MathUtils.PI/4);
 
@@ -90,19 +90,16 @@ public class Eyeball extends Mob implements Observer {
     // --------------------------------------------------------------------------------------------
     @Override
     public void handleObservation(Entity entity) {
-        ObservationListener listener = observationListeners.get(entity.getClass());
-        if(listener != null) {
-            listener.run(entity);
-        }
+        observationListeners.entrySet().stream().filter((entry) -> entry.getKey().isAssignableFrom(entity.getClass())).forEach(entry -> entry.getValue().run(entity));
     }
 
     @Override
-    public <T extends Entity> void addObservationListener(Class<T> clazz, ObservationListener listener) {
+    public void addObservationListener(Class<? extends Entity> clazz, EntityCollisionListener listener) {
         observationListeners.put(clazz, listener);
     }
 
     @Override
-    public <T extends Entity> void removeObservationListener(Class<T> clazz) {
+    public void removeObservationListener(Class<? extends Entity> clazz) {
         observationListeners.remove(clazz);
     }
 }
