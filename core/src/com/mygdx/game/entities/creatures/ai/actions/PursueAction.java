@@ -34,6 +34,7 @@ public class PursueAction extends BehaviorTreeAction implements ActionUsesTarget
         owner.addCollisionListener(target.getClass(), (targetInListener) -> {
             collisionListener.run(targetInListener);
             end(true);
+            owner.removeCollisionListener(target.getClass());
         });
     }
 

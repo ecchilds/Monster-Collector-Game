@@ -3,8 +3,8 @@ package com.mygdx.game.entities;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.entities.utils.EntityCollisionListener;
 
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Entity {
 
@@ -12,7 +12,7 @@ public abstract class Entity {
     protected BodyDef.BodyType bodyType;
     protected float impulseSpeed;
 
-    HashMap<Class<?>, EntityCollisionListener> collisionListeners;
+    Map<Class<?>, EntityCollisionListener> collisionListeners;
 
     public Entity(World world) {
         this(world, 0,0);
@@ -26,7 +26,7 @@ public abstract class Entity {
         this.bodyType = bodyType;
         impulseSpeed = 0f;
 
-        collisionListeners = new HashMap<>();
+        collisionListeners = new ConcurrentHashMap<>();
 
         this.generateBody(world, x, y);
     }
