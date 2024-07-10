@@ -18,6 +18,7 @@ import com.mygdx.game.entities.creatures.Mob;
 import com.mygdx.game.entities.utils.Observer;
 import com.mygdx.game.entities.props.Door;
 import com.mygdx.game.entities.utils.FixtureBuilder;
+import com.mygdx.game.items.Item;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -71,7 +72,7 @@ public class Room {
     private static final int[] FOREGROUND_LAYERS = {5};
 
     // entity lists
-    private final List<VisibleEntity> visibleEntities;
+    private final List<Entity> visibleEntities;
     private final List<Door> doors;
 
     // the "reason why this class exists" objects
@@ -173,11 +174,18 @@ public class Room {
         R build(String roomName, World world, float x, float y, Vector2 initialVelocity);
     }
 
-    public <T extends Item> T spawnNewItem(ItemConstructor<T> constructor, float x, float y, Vector2 initialVelocity) {
+    public <T extends ItemEntity> T spawnNewItem(ItemConstructor<T> constructor, float x, float y, Vector2 initialVelocity) {
         T item = constructor.build(mapName, world, x, y, initialVelocity);
         visibleEntities.add(item);
         item.setExisting(true);
         return item;
+    }
+
+    public ItemEntity spawnNewItem(Item item, float x, float y, Vector2 initialVelocity) {
+        ItemEntity itemEntity = new ItemEntity(item, mapName, world, x, y, initialVelocity);
+        visibleEntities.add(itemEntity);
+        itemEntity.setExisting(true);
+        return itemEntity;
     }
 
     /**
@@ -194,7 +202,7 @@ public class Room {
         creature.setExisting(true);
     }
 
-    public void deSpawn(VisibleEntity entity) {
+    public void deSpawn(Entity entity) {
         if(visibleEntities.contains(entity)) {
             visibleEntities.remove(entity);
             entity.setExisting(false);
@@ -212,16 +220,16 @@ public class Room {
             door.draw(mapBatch, delta);
         }
         visibleEntities.stream()
-                .sorted((VisibleEntity e1, VisibleEntity e2) -> e1.getY()-e2.getY() > 0 ? -1 : 1)
-                .forEachOrdered((VisibleEntity e) -> e.draw(mapBatch, delta));
+                .sorted((Entity e1, Entity e2) -> e1.getY()-e2.getY() > 0 ? -1 : 1)
+                .forEachOrdered((Entity e) -> e.draw(mapBatch, delta));
         mapBatch.end();
         mapRenderer.render(FOREGROUND_LAYERS);
 
         // update monster AI's
         GdxAI.getTimepiece().update(delta);
         visibleEntities.stream().
-                filter((VisibleEntity e) -> e instanceof Mob).
-                forEach((VisibleEntity e) -> {
+                filter((Entity e) -> e instanceof Mob).
+                forEach((Entity e) -> {
                     ((Mob)e).update(delta);
                 });
 
@@ -256,7 +264,7 @@ public class Room {
     public void dispose() {
         world.dispose();
         map.dispose();
-        doors.forEach(VisibleEntity::dispose);
-        visibleEntities.forEach(VisibleEntity::dispose);
+        doors.forEach(AnimatedEntity::dispose);
+        visibleEntities.forEach(Entity::dispose);
     }
 }

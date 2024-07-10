@@ -13,39 +13,24 @@ import com.mygdx.game.Direction;
 import java.util.EnumMap;
 import java.util.Map;
 
-abstract public class VisibleEntity extends Entity {
+abstract public class AnimatedEntity extends Entity {
 
-    // variables for rendering
-    protected float renderOffsetX;
-    protected float renderOffsetY;
-    protected float height;
-    protected float width;
+    protected final Map<Direction, TextureRegion> idleSprites = new EnumMap<>(Direction.class);
+    protected Direction facing = Direction.DOWN;
 
-    protected final Map<Direction, TextureRegion> idleSprites;
-    protected Direction facing;
-
-    public VisibleEntity(BodyDef.BodyType bodyType, World world) {
+    public AnimatedEntity(BodyDef.BodyType bodyType, World world) {
         this(bodyType, world, 0, 0);
     }
 
-    public VisibleEntity(BodyDef.BodyType bodyType, World world, float x, float y) {
+    public AnimatedEntity(BodyDef.BodyType bodyType, World world, float x, float y) {
         this(bodyType, world, x, y, 0, 0, 0, 0);
     }
 
-    public VisibleEntity(BodyDef.BodyType bodyType, World world,
-                         float x, float y,
-                         float renderOffsetX, float renderOffsetY,
-                         float renderWidth, float renderHeight) {
-        super(bodyType, world, x, y);
-
-        this.width = renderWidth;
-        this.height = renderHeight;
-
-        this.renderOffsetX = renderOffsetX;
-        this.renderOffsetY = renderOffsetY;
-
-        idleSprites = new EnumMap<>(Direction.class);
-        facing = Direction.DOWN;
+    public AnimatedEntity(BodyDef.BodyType bodyType, World world,
+                          float x, float y,
+                          float renderOffsetX, float renderOffsetY,
+                          float renderWidth, float renderHeight) {
+        super(bodyType, world, x, y, renderOffsetX, renderOffsetY, renderWidth, renderHeight);
     }
 
     //NOTE: delta is currently unused by VisibleEntity, but will be necessary when idle animations are implemented.
@@ -78,6 +63,7 @@ abstract public class VisibleEntity extends Entity {
         return idleSprites.get(facing);
     }
 
+    @Override
     public void dispose() {
         for (TextureRegion sprite : idleSprites.values()) {
             sprite.getTexture().dispose();

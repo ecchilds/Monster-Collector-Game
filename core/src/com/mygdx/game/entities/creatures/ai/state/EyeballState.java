@@ -1,9 +1,8 @@
 package com.mygdx.game.entities.creatures.ai.state;
 
 import com.badlogic.gdx.ai.msg.Telegram;
-import com.mygdx.game.entities.Apple;
 import com.mygdx.game.entities.Entity;
-import com.mygdx.game.entities.Item;
+import com.mygdx.game.entities.ItemEntity;
 import com.mygdx.game.entities.creatures.Creature;
 import com.mygdx.game.entities.creatures.Eyeball;
 import com.mygdx.game.entities.creatures.Player;
@@ -29,7 +28,7 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
 
         @Override
         public void exit(Eyeball mob, Action action) {
-            mob.removeObservationListener(Apple.class);
+            mob.removeObservationListener(ItemEntity.class);
         }
     },
 
@@ -102,7 +101,7 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
         @Override
         public Action newInstance(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
             return new StateReversionActionWrapper(mob, new PursueAction(mob, (Entity target) -> {
-                ((Item)target).pickUp();
+                ((ItemEntity)target).pickUp();
             }), ai, 1);
         }
 
@@ -129,7 +128,7 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
         @Override
         public Action newInstance(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
             return new StateTransitionActionWrapper<>(mob, ai, ai.getDefaultState(), 1, new ActionSequence(mob,
-                    new PursueAction(mob, (Entity target) -> ((Item)target).pickUp()),
+                    new PursueAction(mob, (Entity target) -> ((ItemEntity)target).pickUp()),
                     new WatchAction(mob, 2)
             ));
         }
@@ -160,12 +159,12 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
         @Override
         public void exit(Eyeball mob, Action action) {
             ((ActionWrapper)action).resetAndSleep();
-            mob.removeObservationListener(Apple.class);
+            mob.removeObservationListener(ItemEntity.class);
         }
     };
 
     private static void addAppleObservationListener(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
-        mob.addObservationListener(Apple.class, (apple) -> {
+        mob.addObservationListener(ItemEntity.class, (apple) -> {
             ai.changeState(PURSUE_ITEM, 3, List.of(apple));
         });
     }

@@ -2,10 +2,10 @@ package com.mygdx.game.entities.props;
 
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.Direction;
-import com.mygdx.game.entities.VisibleEntity;
+import com.mygdx.game.entities.AnimatedEntity;
 import com.mygdx.game.entities.utils.FixtureBuilder;
 
-public class Prop extends VisibleEntity {
+public class Prop extends AnimatedEntity {
 
     public Prop(World world, float x, float y) {
         this(world, x, y, 0, 0);

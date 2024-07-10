@@ -14,7 +14,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Direction;
 import com.mygdx.game.Room;
-import com.mygdx.game.entities.VisibleEntity;
+import com.mygdx.game.entities.AnimatedEntity;
 import com.mygdx.game.entities.utils.FixtureBuilder;
 import com.mygdx.game.entities.utils.MessageTypes;
 
@@ -22,7 +22,7 @@ import java.util.*;
 
 //TODO: more robust textures and animations. move ALL animation rules to "VisibleEntity"
 
-abstract public class Creature extends VisibleEntity implements Telegraph {
+abstract public class Creature extends AnimatedEntity implements Telegraph {
 
     // Physics values. Stored for when creature moves between rooms.
     private final float radius;

@@ -1,5 +1,6 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.game.entities.utils.EntityCollisionListener;
 
@@ -7,6 +8,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Entity {
+
+    // variables for rendering
+    protected float renderOffsetX;
+    protected float renderOffsetY;
+    protected float height;
+    protected float width;
 
     protected Body body;
     protected final BodyDef.BodyType bodyType;
@@ -31,6 +38,19 @@ public abstract class Entity {
         this.generateBody(world, x, y);
     }
 
+    public Entity(BodyDef.BodyType bodyType, World world,
+                  float x, float y,
+                  float renderOffsetX, float renderOffsetY,
+                  float renderWidth, float renderHeight) {
+        this(bodyType, world, x, y);
+
+        this.width = renderWidth;
+        this.height = renderHeight;
+
+        this.renderOffsetX = renderOffsetX;
+        this.renderOffsetY = renderOffsetY;
+    }
+
     protected final void generateBody(World world, float x, float y) {
 
         // create physics body in given world, at given coordinates
@@ -40,6 +60,8 @@ public abstract class Entity {
         this.body = world.createBody(bodyDef);
         this.body.setUserData(this);
     }
+
+    public abstract void draw(Batch batch, float delta);
 
     public void addCollisionListener(Class<? extends Entity> clazz, EntityCollisionListener listener) {
         collisionListeners.put(clazz, listener);
@@ -80,4 +102,6 @@ public abstract class Entity {
     public void setExisting(boolean existing) {
         this.existing = existing;
     }
+
+    public abstract void dispose();
 }
