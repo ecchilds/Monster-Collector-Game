@@ -11,11 +11,11 @@ import com.mygdx.game.entities.creatures.ai.Box2dRaycastCollisionDetector;
 
 public class WanderAction extends Action {
 
-    protected Wander<Vector2> wander;
-    protected RaycastObstacleAvoidance<Vector2> avoidance;
-    protected CentralRayWithWhiskersConfiguration<Vector2> rayCfg;
+    protected final Wander<Vector2> wander;
+    protected final RaycastObstacleAvoidance<Vector2> avoidance;
+    protected final CentralRayWithWhiskersConfiguration<Vector2> rayCfg;
     //protected BlendedSteering<Vector2> steering;
-    protected PrioritySteering<Vector2> steering;
+    protected final PrioritySteering<Vector2> steering;
 
     protected float wanderRate;
     private float timeSinceLastPause;

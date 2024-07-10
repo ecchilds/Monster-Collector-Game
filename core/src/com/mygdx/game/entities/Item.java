@@ -11,7 +11,7 @@ import com.mygdx.game.entities.utils.FixtureBuilder;
 abstract public class Item extends VisibleEntity {
 
     private static final float DAMPING = 8f;
-    protected String roomName;
+    protected final String roomName;
 
     public Item(String spriteName, String roomName, World world, float x, float y, float radius, float density, float friction) {
         super(BodyDef.BodyType.DynamicBody, world, x, y, 0.23f, 0.15f, 0, 0);

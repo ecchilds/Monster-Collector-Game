@@ -19,7 +19,7 @@ public class MobAI<M extends Mob, S extends Enum<S> & State<M, S>> {
     private S nextState = null;
     private List<Entity> nextStateTargets = List.of();
 
-    // Used in case multiple state transitions occur in-between ai updates, to ensure only the most important one sticks.
+    // Used in case multiple state transitions occur in-between AI updates, to ensure only the most important one sticks.
     // In general:
     // 5 - caused by something scary to the mob
     // 4 - caused by the player
@@ -110,8 +110,7 @@ public class MobAI<M extends Mob, S extends Enum<S> & State<M, S>> {
     }
 
     public boolean handleMessage(Telegram telegram) {
-        currentState.handleMessage(telegram, owner, this);
-        return true;
+        return currentState.handleMessage(telegram, owner, this);
     }
 
     public S getDefaultState() {

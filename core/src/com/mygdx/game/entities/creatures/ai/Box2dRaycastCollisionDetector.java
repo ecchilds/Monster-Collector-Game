@@ -10,8 +10,8 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Box2dRaycastCollisionDetector implements RaycastCollisionDetector<Vector2> {
-    private World world;
-    private Box2dRaycastCallback callback;
+    private final World world;
+    private final Box2dRaycastCallback callback;
 
     public Box2dRaycastCollisionDetector (World world) {
         this(world, new Box2dRaycastCallback());

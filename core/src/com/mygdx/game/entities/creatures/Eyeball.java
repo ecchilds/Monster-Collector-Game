@@ -19,9 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Eyeball extends Mob implements Observer {
 
-    Map<Class<? extends Entity>, EntityCollisionListener> observationListeners = new ConcurrentHashMap<>();
-    MobAI<Eyeball, EyeballState> ai = new MobAI<>(this, EyeballState.WANDER, EyeballState.class);
-    //VisionCone visionCone = new VisionCone(this, 2, MathUtils.PI/4);
+    final Map<Class<? extends Entity>, EntityCollisionListener> observationListeners = new ConcurrentHashMap<>();
+    final MobAI<Eyeball, EyeballState> ai = new MobAI<>(this, EyeballState.WANDER, EyeballState.class);
 
     public Eyeball(World world, float x, float y) {
         super(world, x, y, 0.2f, 0.5f, 0.3f);
@@ -29,7 +28,6 @@ public class Eyeball extends Mob implements Observer {
         // AI
         generateDetectionFixture();
         addObservationListener(Player.class, (Entity e) -> {
-            this.setTarget(e);
             ai.changeState(EyeballState.WATCH_PLAYER, 4, List.of(e));
         });
 

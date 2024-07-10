@@ -11,7 +11,7 @@ public class PursueAction extends BehaviorTreeAction implements ActionUsesTarget
 
     Entity target;
     Seek<Vector2> seekBehavior = null;
-    EntityCollisionListener collisionListener;
+    final EntityCollisionListener collisionListener;
 
     public PursueAction(Mob owner, EntityCollisionListener collisionListener) {
         super(owner);

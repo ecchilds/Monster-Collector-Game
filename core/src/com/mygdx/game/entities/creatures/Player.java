@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class Player extends Creature {
 
-    private CharacterController controller;
+    private final CharacterController controller;
 
     public Player(World world, float x, float y) {
         super("hoodie", world, x, y, 0.25f, 1f, 0.5f);
@@ -100,10 +100,4 @@ public class Player extends Creature {
     public CharacterController getController() {
         return controller;
     }
-
-    //    @Override
-//    public void draw(Batch batch, float delta) {
-//        Vector2 pos = body.getPosition();
-//        batch.draw(getCurrentSprite(delta), pos.x - 0.5f, pos.y - 0.2f, 1f, 1f);
-//    }
 }

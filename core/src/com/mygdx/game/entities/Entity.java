@@ -9,10 +9,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class Entity {
 
     protected Body body;
-    protected BodyDef.BodyType bodyType;
+    protected final BodyDef.BodyType bodyType;
     protected float impulseSpeed;
 
-    Map<Class<?>, EntityCollisionListener> collisionListeners;
+    final Map<Class<?>, EntityCollisionListener> collisionListeners = new ConcurrentHashMap<>();
 
     public Entity(World world) {
         this(world, 0,0);
@@ -25,8 +25,6 @@ public abstract class Entity {
     public Entity(BodyDef.BodyType bodyType, World world, float x, float y) {
         this.bodyType = bodyType;
         impulseSpeed = 0f;
-
-        collisionListeners = new ConcurrentHashMap<>();
 
         this.generateBody(world, x, y);
     }

@@ -7,7 +7,7 @@ import java.util.List;
 
 public abstract class BranchAction extends BehaviorTreeAction {
 
-    protected List<BehaviorTreeAction> actions;
+    protected final List<BehaviorTreeAction> actions;
 
     public BranchAction(Mob owner, BehaviorTreeAction... actions) {
         super(owner);

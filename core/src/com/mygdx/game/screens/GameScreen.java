@@ -5,30 +5,17 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Config;
 import com.mygdx.game.GameWorld;
-import com.mygdx.game.PlayerManager;
 import com.mygdx.game.ui.GameUI;
-import com.mygdx.game.ui.WindowGroup;
-import com.mygdx.game.ui.WindowModal;
 
 public class GameScreen implements Screen {
 
-    SpriteBatch batch;
-    private OrthographicCamera camera;
+    private final SpriteBatch batch;
+    private final OrthographicCamera camera;
 
     // meters on screen
     private static final float SCREEN_METERS = 25f;
@@ -52,9 +39,6 @@ public class GameScreen implements Screen {
         // input
         InputMultiplexer multiplexer = new InputMultiplexer(GameUI.getStage(), GameWorld.getPlayer().getController());
         Gdx.input.setInputProcessor(multiplexer);
-
-        // players
-        //PlayerManager.init();
     }
 
     @Override
@@ -102,6 +86,5 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         GameWorld.dispose();
-        PlayerManager.getCurrent().dispose();
     }
 }

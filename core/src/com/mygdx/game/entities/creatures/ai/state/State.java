@@ -30,11 +30,12 @@ public interface State <T extends Mob, S extends Enum<S> & State<T, S>> {
         return true;
     }
 
-    // Whatever happens here can happens every time an action is created, even if that action is immediately discarded. Be careful!
+    // Whatever happens here can happen every time an action is created, even if that action is immediately discarded. Be careful!
     Action newInstance(T mob, MobAI<T, S> ai);
 
     void exit(T mob, Action action);
 
-    default void handleMessage(Telegram telegram, T Mob, MobAI<T, S> ai) {
+    default boolean handleMessage(Telegram telegram, T Mob, MobAI<T, S> ai) {
+        return false;
     }
 }

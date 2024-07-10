@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Direction;
 import com.mygdx.game.Room;
-import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.creatures.ai.BodyLocation;
 
 abstract public class Mob extends Creature implements Steerable<Vector2> {
@@ -17,12 +16,8 @@ abstract public class Mob extends Creature implements Steerable<Vector2> {
     private float maxLinearAcceleration;
     private float maxAngularSpeed;
     private float maxAngularAcceleration;
-    private float zeroThreshold = 0.001f;
-    private boolean tagged;
+    private boolean tagged = false;
     private float boundingRadius;
-
-    // used by some steering behaviors
-    private Entity target;
 
     public Mob(World world, float x, float y) {
         super("mob", world, x, y);
@@ -36,7 +31,6 @@ abstract public class Mob extends Creature implements Steerable<Vector2> {
 
     private void init() {
         body.setAngularDamping(getDefaultAngularDamping());
-        target = null;
     }
 
     @Override
@@ -69,14 +63,6 @@ abstract public class Mob extends Creature implements Steerable<Vector2> {
      */
     protected float getDefaultAngularDamping() {
         return 5f;
-    }
-
-    public Entity getTarget() {
-        return target;
-    }
-
-    public void setTarget(Entity target) {
-        this.target = target;
     }
 
     // Steerable stuff. Majority of code taken from:
@@ -173,7 +159,7 @@ abstract public class Mob extends Creature implements Steerable<Vector2> {
 
     @Override
     public void setOrientation(float orientation) {
-        // this is set blank in other BodySteerable. There's probably a good reason why.
+        // This is set blank in other BodySteerable. There's probably a good reason why.
         body.setTransform(getX(), getY(), orientation);
     }
 

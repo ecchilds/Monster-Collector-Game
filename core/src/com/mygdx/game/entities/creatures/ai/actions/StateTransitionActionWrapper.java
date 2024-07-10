@@ -9,7 +9,7 @@ public class StateTransitionActionWrapper<S extends Enum<S> & State<?, S>> exten
 
 
     // Utilized for the state transition
-    MobAI<?, S> ai;
+    final MobAI<?, S> ai;
     S state;
     int statePriority;
 

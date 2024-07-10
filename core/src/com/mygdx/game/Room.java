@@ -51,13 +51,7 @@ public class Room {
 
         @Override
         public void preSolve(Contact contact, Manifold oldManifold) {
-//            System.out.println(contact.getFixtureA().toString() + contact.getFixtureB().toString());
-//            System.out.println(contact.getFixtureA().getBody().getUserData());
-//            System.out.println(contact.getFixtureB().getBody().getUserData());
-//            System.out.println(oldManifold.getType());
-//            if(contact.getFixtureB().getBody().getUserData() == null) {
-//                contact.setEnabled(false);
-//            }
+
         }
 
         @Override

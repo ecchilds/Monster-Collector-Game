@@ -15,7 +15,7 @@ import java.util.List;
 
 public class WindowModal extends Window {
 
-    private TextButton closeButton;
+    private final TextButton closeButton;
     private static final List<Integer> MAPPED_KEYS = List.of(
             Input.Keys.UP,
             Input.Keys.DOWN,

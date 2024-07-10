@@ -6,8 +6,8 @@ import com.mygdx.game.entities.creatures.ai.MobAI;
 
 public class StateReversionActionWrapper extends ActionWrapper {
 
-    MobAI<?, ?> ai;
-    int statePriority;
+    final MobAI<?, ?> ai;
+    final int statePriority;
 
     public StateReversionActionWrapper(Mob owner, BehaviorTreeAction wrapped, MobAI<?,?> ai, int statePriority) {
         super(owner, wrapped);

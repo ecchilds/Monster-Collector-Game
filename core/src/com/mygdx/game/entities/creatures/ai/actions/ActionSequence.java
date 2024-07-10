@@ -6,7 +6,7 @@ import com.mygdx.game.entities.creatures.ai.ActionStatus;
 public class ActionSequence extends BranchAction {
 
     int index = 0;
-    int numberOfActions;
+    final int numberOfActions;
 
     public ActionSequence(Mob owner, BehaviorTreeAction... actions) {
         super(owner, actions);

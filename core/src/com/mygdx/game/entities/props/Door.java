@@ -18,14 +18,13 @@ public class Door extends Prop {
 
     private final String destination;
     private final String source;
-    private final List<Prop> subProps;
+    private final List<Prop> subProps = new ArrayList<>();
 
     public Door(RectangleMapObject door, World world, String sourceMap) {
         super(world, 0, 0);
 
         destination = door.getName();
         source = sourceMap;
-        subProps = new ArrayList<>();
 
         PolygonShape shape = new PolygonShape();
         float x = door.getProperties().get("x", float.class) / Config.PIXELS_PER_METER;
@@ -86,12 +85,4 @@ public class Door extends Prop {
     public List<Prop> getSubProps() {
         return subProps;
     }
-
-    //    @Override
-//    public void draw(Batch batch, float delta) {
-//        super.draw(batch, delta);
-//        for (Prop prop : subProps) {
-//            prop.draw(batch, delta);
-//        }
-//    }
 }

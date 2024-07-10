@@ -21,7 +21,7 @@ abstract public class VisibleEntity extends Entity {
     protected float height;
     protected float width;
 
-    protected Map<Direction, TextureRegion> idleSprites;
+    protected final Map<Direction, TextureRegion> idleSprites;
     protected Direction facing;
 
     public VisibleEntity(BodyDef.BodyType bodyType, World world) {

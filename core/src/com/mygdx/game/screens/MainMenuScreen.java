@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class MainMenuScreen implements Screen {
 
-    private Stage ui;
-    private SpriteBatch batch;
+    private final Stage ui;
+    private final SpriteBatch batch;
 
     public MainMenuScreen(SpriteBatch batch) {
         this.batch = batch;

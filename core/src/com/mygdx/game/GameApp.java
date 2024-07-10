@@ -7,23 +7,15 @@ import com.mygdx.game.screens.GameScreen;
 
 public class GameApp extends Game {
 	private SpriteBatch batch;
-
-	//private Screen current;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		//current = new GameScreen(batch);
 		this.setScreen(new GameScreen(batch));
 
 		Gdx.audio.newSound(Gdx.files.internal("audio/267831__magedu__video-recorder-load-cassette-01v2.wav")).play();
 
 		System.out.println("Hello World!");
-	}
-
-	@Override
-	public void render () {
-		super.render();
 	}
 	
 	@Override

@@ -14,8 +14,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Direction;
 import com.mygdx.game.Room;
-import com.mygdx.game.entities.Entity;
-import com.mygdx.game.entities.Item;
 import com.mygdx.game.entities.VisibleEntity;
 import com.mygdx.game.entities.utils.FixtureBuilder;
 import com.mygdx.game.entities.utils.MessageTypes;
@@ -26,20 +24,19 @@ import java.util.*;
 
 abstract public class Creature extends VisibleEntity implements Telegraph {
 
-    // physics values. stored for when creature moves between rooms
+    // Physics values. Stored for when creature moves between rooms.
     private final float radius;
     private final float density;
     private final float friction;
 
-    // this is here for debugging purposes. ignore the warning.
+    // This is here for debugging purposes. Ignore the warning.
     private final String name;
 
-    // variables for use in animations
+    // Variables for use in animations
     protected float animationTime;
-    protected Map<Direction, Animation<TextureRegion>> walkingAnimations;
+    protected final Map<Direction, Animation<TextureRegion>> walkingAnimations = new EnumMap<>(Direction.class);
 
-    // yeehaw
-    protected Array<Telegraph> watchers = new Array<>(); // TODO: consider a different collection from java library
+    protected final Array<Telegraph> watchers = new Array<>(); // TODO: consider a different collection from java library
 
     public Creature(World world, float x, float y) {
         this("john smith", world, x, y);
@@ -69,8 +66,6 @@ abstract public class Creature extends VisibleEntity implements Telegraph {
 
         FixtureBuilder.buildCircle(body, radius, density, friction);
         body.setLinearDamping(getDefaultDamping());
-
-        walkingAnimations = new EnumMap<>(Direction.class);
     }
 
     // NOTE: these next three functions feel EXTREMELY illegal, especially getDefaultDamping, since it is
@@ -102,7 +97,7 @@ abstract public class Creature extends VisibleEntity implements Telegraph {
         FixtureBuilder.buildCircle(body, radius, density, friction);
         body.setLinearDamping(getDefaultDamping());
 
-        //ping all listeners
+        // ping all listeners
         for (Telegraph watcher : watchers) {
             MessageManager.getInstance().dispatchMessage(this, watcher, MessageTypes.ROOM_CHANGE, room);
         }
