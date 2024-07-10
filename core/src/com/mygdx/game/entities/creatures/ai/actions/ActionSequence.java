@@ -16,7 +16,6 @@ public class ActionSequence extends BranchAction {
     @Override
     public void update(float delta) {
         var action = actions.get(index);
-        action.update(delta);
 
         if (action.getStatus() == ActionStatus.FAILED) {
             end(false);
@@ -25,6 +24,8 @@ public class ActionSequence extends BranchAction {
             if (index >= numberOfActions) {
                 end(true);
             }
+        } else {
+            action.update(delta);
         }
     }
 

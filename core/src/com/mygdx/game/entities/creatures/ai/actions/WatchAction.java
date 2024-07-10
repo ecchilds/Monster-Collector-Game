@@ -5,10 +5,8 @@ import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.creatures.Mob;
 import com.mygdx.game.entities.creatures.ai.BodyLocation;
 
-public class WatchAction extends BehaviorTreeAction implements ActionUsesTarget {
+public class WatchAction extends TimedAction implements ActionUsesTarget {
 
-    private float timeToLive;
-    private float timeLived = 0;
     private BodyLocation targetBody;
     private Entity target;
 
@@ -17,33 +15,17 @@ public class WatchAction extends BehaviorTreeAction implements ActionUsesTarget 
     }
 
     public WatchAction(Mob owner, float timeToLive) {
-        super(owner);
-        this.timeToLive = timeToLive;
+        super(owner, timeToLive);
     }
 
     @Override
-    public void update(float delta) {
-        timeLived += delta;
-
-        if(timeLived < timeToLive) {
-            Vector2 targetPosition = targetBody.getPosition();
-            owner.setOrientation((float)Math.atan2(-(targetPosition.x - owner.getX()), targetPosition.y - owner.getY()));
-        } else {
-            end(true);
+    public void timedUpdate(float delta) {
+        if (!target.isExisting()) {
+            end(false);
         }
-    }
 
-    /**
-     * Reset "time lived" counter.
-     */
-    @Override
-    public void resetAndSleep() {
-        super.resetAndSleep();
-        timeLived = 0;
-    }
-
-    public void setTimeToLive(float timeToLive) {
-        this.timeToLive = timeToLive;
+        Vector2 targetPosition = targetBody.getPosition();
+        owner.setOrientation((float)Math.atan2(-(targetPosition.x - owner.getX()), targetPosition.y - owner.getY()));
     }
 
     @Override

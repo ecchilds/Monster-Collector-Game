@@ -16,14 +16,19 @@ public interface State <T extends Mob, S extends Enum<S> & State<T, S>> {
     // To be used ONLY for states that were the previous state. For example, if a monster pursuing an object of interest got
     // distracted by the player, it would still want to pursue that object once the player left. Therefore, the target should
     // remain unchanged between executions.
-    // This returns an alternate action to be used, if this action is no longer viable.
+    // This returns an alternate state to be used, if this action is no longer viable for re-entry.
     // Do note that this will need to be overwritten for branch and wrapped actions, as they won't have a target.
-    default void reEnter(T mob, MobAI<T, S> ai, Action action) {
+    default S reEnter(T mob, MobAI<T, S> ai, Action action) {
         if (action instanceof ActionUsesTarget targetedAction) {
-            enter(mob, ai, action, List.of(targetedAction.getTarget()));
+            if (targetedAction.getTarget().isExisting()) {
+                enter(mob, ai, action, List.of(targetedAction.getTarget()));
+            } else {
+                return ai.getDefaultState();
+            }
         } else {
             enter(mob, ai, action, List.of());
         }
+        return null;
     }
 
     default boolean isReEnterable() {

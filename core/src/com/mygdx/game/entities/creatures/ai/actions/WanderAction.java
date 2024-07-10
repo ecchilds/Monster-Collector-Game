@@ -14,7 +14,6 @@ public class WanderAction extends Action {
     protected final Wander<Vector2> wander;
     protected final RaycastObstacleAvoidance<Vector2> avoidance;
     protected final CentralRayWithWhiskersConfiguration<Vector2> rayCfg;
-    //protected BlendedSteering<Vector2> steering;
     protected final PrioritySteering<Vector2> steering;
 
     protected float wanderRate;

@@ -90,7 +90,14 @@ public class MobAI<M extends Mob, S extends Enum<S> & State<M, S>> {
 
             Action newAction = actions.computeIfAbsent(nextState, state -> state.newInstance(owner, this));
             if (nextState == previousState && stateReversionOccurred) {
-                nextState.reEnter(owner, this, newAction);
+                S fallBackState = nextState.reEnter(owner, this, newAction);
+
+                if (fallBackState != null) {
+                    nextState = fallBackState;
+                    newAction = actions.computeIfAbsent(fallBackState, state -> state.newInstance(owner, this));
+                    fallBackState.enter(owner, this, newAction, List.of());
+                }
+
                 stateReversionOccurred = false;
             } else {
                 nextState.enter(owner, this, newAction, nextStateTargets);

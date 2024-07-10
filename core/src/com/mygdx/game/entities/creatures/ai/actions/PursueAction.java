@@ -40,6 +40,10 @@ public class PursueAction extends BehaviorTreeAction implements ActionUsesTarget
 
     @Override
     public void update(float delta) {
+        if (!target.isExisting()) {
+            end(false);
+        }
+
         // code taken from here:
         // https://github.com/piotr-j/ggj2016/blob/master/core/src/com/mygdx/game/entities/Walker.java
         seekBehavior.calculateSteering(steeringOutput);

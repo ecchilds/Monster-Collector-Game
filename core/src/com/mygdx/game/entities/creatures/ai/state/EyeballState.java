@@ -31,12 +31,6 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
         public void exit(Eyeball mob, Action action) {
             mob.removeObservationListener(Apple.class);
         }
-
-        private void addAppleObservationListener(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
-            mob.addObservationListener(Apple.class, (apple) -> {
-                ai.changeState(PURSUE_ITEM, 3, List.of(apple));
-            });
-        }
     },
 
     WATCH_PLAYER() {
@@ -53,9 +47,8 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
         }
 
         @Override
-        public void reEnter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action) {
-            var wrapper = (ActionWrapper)action;
-            wrapper.start();
+        public EyeballState reEnter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action) {
+            return reEnterWrappedTargetedAction(mob, ai, action);
         }
 
         @Override
@@ -102,9 +95,8 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
         }
 
         @Override
-        public void reEnter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action) {
-            var wrapper = (ActionWrapper)action;
-            wrapper.start();
+        public EyeballState reEnter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action) {
+            return reEnterWrappedTargetedAction(mob, ai, action);
         }
 
         @Override
@@ -145,6 +137,46 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
         @Override
         public void exit(Eyeball mob, Action action) {
             ((ActionWrapper)action).resetAndSleep();
+        }
+    },
+
+    CONFUSION() {
+        @Override
+        public void enter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action, List<Entity> targets) {
+            ((ActionWrapper)action).start();
+            addAppleObservationListener(mob, ai);
+        }
+
+        @Override
+        public boolean isReEnterable() {
+            return false;
+        }
+
+        @Override
+        public Action newInstance(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
+            return new StateTransitionActionWrapper<>(mob, ai, ai.getDefaultState(), 1, new ConfusionAction(mob, 2.4f));
+        }
+
+        @Override
+        public void exit(Eyeball mob, Action action) {
+            ((ActionWrapper)action).resetAndSleep();
+            mob.removeObservationListener(Apple.class);
+        }
+    };
+
+    private static void addAppleObservationListener(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
+        mob.addObservationListener(Apple.class, (apple) -> {
+            ai.changeState(PURSUE_ITEM, 3, List.of(apple));
+        });
+    }
+
+    private static EyeballState reEnterWrappedTargetedAction(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action) {
+        var wrapper = (ActionWrapper)action;
+        if (((PursueAction)wrapper.getWrapped()).getTarget().isExisting()) {
+            wrapper.start();
+            return null;
+        } else {
+            return CONFUSION;
         }
     }
 }

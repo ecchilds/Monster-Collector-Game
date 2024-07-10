@@ -11,6 +11,8 @@ import com.mygdx.game.GameWorld;
 import com.mygdx.game.control.CharacterController;
 import com.mygdx.game.control.Keyboard;
 import com.mygdx.game.entities.Apple;
+import com.mygdx.game.entities.Entity;
+import com.mygdx.game.entities.Item;
 import com.mygdx.game.entities.utils.MessageTypes;
 
 import java.util.Objects;
@@ -26,6 +28,8 @@ public class Player extends Creature {
 
         body.setLinearDamping(getDefaultDamping());
         setImpulseSpeed(0.15f);
+
+        addCollisionListener(Item.class, (Entity target) -> ((Item)target).pickUp());
 
         // Initialize all animations
         putIdleSprite(Direction.DOWN, "hoodie-idle-down.png");
