@@ -4,6 +4,7 @@ import com.badlogic.gdx.ai.msg.Telegram;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.creatures.Mob;
 import com.mygdx.game.entities.creatures.ai.actions.Action;
+import com.mygdx.game.entities.creatures.ai.actions.BehaviorTreeAction;
 import com.mygdx.game.entities.creatures.ai.state.State;
 
 import java.util.EnumMap;
@@ -13,6 +14,7 @@ public class MobAI<M extends Mob, S extends Enum<S> & State<M, S>> {
 
     private S currentState;
     private S previousState = null;
+    private boolean stateReversionOccurred = false; // Set to true if previous state is intentionally set, so that a special state re-entry transition can occur.
     private S defaultState;
     private S nextState = null;
     private List<Entity> nextStateTargets = List.of();
@@ -46,6 +48,7 @@ public class MobAI<M extends Mob, S extends Enum<S> & State<M, S>> {
             nextState = newState;
             nextStatePriority = priority;
             nextStateTargets = targets;
+            stateReversionOccurred = false;
             return true;
         }
         return false;
@@ -70,14 +73,31 @@ public class MobAI<M extends Mob, S extends Enum<S> & State<M, S>> {
         return null;
     }
 
+    public void revertState(int priority) {
+        var previousAction = actions.get(previousState);
+        if (previousState.isReEnterable() && previousState != currentState && (!(previousAction instanceof BehaviorTreeAction) || ((BehaviorTreeAction) previousAction).getStatus() == ActionStatus.INCOMPLETE)) {
+            if (changeStateInternal(previousState, priority, List.of())) {
+                stateReversionOccurred = true;
+            }
+        } else {
+            changeStateInternal(defaultState, priority, List.of());
+        }
+    }
+
     public void update(float delta) {
-        if (nextState != null && nextState != currentState) {
+        if (nextState != null) {
             currentState.exit(owner, actions.get(currentState));
+
+            Action newAction = actions.computeIfAbsent(nextState, state -> state.newInstance(owner, this));
+            if (nextState == previousState && stateReversionOccurred) {
+                nextState.reEnter(owner, this, newAction);
+                stateReversionOccurred = false;
+            } else {
+                nextState.enter(owner, this, newAction, nextStateTargets);
+            }
+
             previousState = currentState;
             currentState = nextState;
-
-            Action newAction = actions.computeIfAbsent(currentState, state -> state.newInstance(owner, this));
-            currentState.enter(owner, this, newAction, nextStateTargets);
 
             nextState = null;
             nextStatePriority = 0;
@@ -100,9 +120,5 @@ public class MobAI<M extends Mob, S extends Enum<S> & State<M, S>> {
 
     public void setDefaultState(S defaultState) {
         this.defaultState = defaultState;
-    }
-
-    public S getPreviousState() {
-        return previousState;
     }
 }

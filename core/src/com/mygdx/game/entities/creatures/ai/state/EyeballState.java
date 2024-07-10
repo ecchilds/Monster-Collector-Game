@@ -34,7 +34,7 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
 
         private void addAppleObservationListener(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
             mob.addObservationListener(Apple.class, (apple) -> {
-                ai.changeState(PURSUE_ITEM, 1, List.of(apple));
+                ai.changeState(PURSUE_ITEM, 3, List.of(apple));
             });
         }
     },
@@ -47,19 +47,25 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
             if (target instanceof Creature) {
                 ((Creature) target).addWatcher(mob);
             }
-            var wrapper = (StateTransitionActionWrapper<?>)action;
+            var wrapper = (ActionWrapper)action;
             wrapper.start();
             ((WatchAction)wrapper.getWrapped()).setTarget(target);
         }
 
         @Override
+        public void reEnter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action) {
+            var wrapper = (ActionWrapper)action;
+            wrapper.start();
+        }
+
+        @Override
         public Action newInstance(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
-            return new StateTransitionActionWrapper<>(mob, ai, ai.getDefaultState(), 1, new WatchAction(mob));
+            return new StateReversionActionWrapper(mob, new WatchAction(mob), ai, 1);
         }
 
         @Override
         public void exit(Eyeball mob, Action action) {
-            var wrapper = (StateTransitionActionWrapper<?>)action;
+            var wrapper = (ActionWrapper)action;
             wrapper.resetAndSleep();
 
             var watchAction = (WatchAction)wrapper.getWrapped();
@@ -88,21 +94,27 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
 
         @Override
         public void enter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action, List<Entity> targets) {
-            var wrapper = (StateTransitionActionWrapper<?>)action;
+            var wrapper = (ActionWrapper)action;
             wrapper.start();
             ((PursueAction)wrapper.getWrapped()).setTarget(targets.get(0));
         }
 
         @Override
+        public void reEnter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action) {
+            var wrapper = (ActionWrapper)action;
+            wrapper.start();
+        }
+
+        @Override
         public Action newInstance(Eyeball mob, MobAI<Eyeball, EyeballState> ai) {
-            return new StateTransitionActionWrapper<>(mob, ai, WANDER, 1, new PursueAction(mob, (Entity target) -> {
+            return new StateReversionActionWrapper(mob, new PursueAction(mob, (Entity target) -> {
                 ((Item)target).pickUp();
-            }));
+            }), ai, 1);
         }
 
         @Override
         public void exit(Eyeball mob, Action action) {
-            ((StateTransitionActionWrapper<?>)action).resetAndSleep();
+            ((ActionWrapper)action).resetAndSleep();
         }
     },
 
@@ -110,9 +122,14 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
 
         @Override
         public void enter(Eyeball mob, MobAI<Eyeball, EyeballState> ai, Action action, List<Entity> targets) {
-            var wrapper = ((StateTransitionActionWrapper<?>)action);
+            var wrapper = (ActionWrapper)action;
             wrapper.start();
             ((ActionSequence)wrapper.getWrapped()).setTargets(targets);
+        }
+
+        @Override
+        public boolean isReEnterable() {
+            return false;
         }
 
         @Override
@@ -125,7 +142,7 @@ public enum EyeballState implements State<Eyeball, EyeballState> {
 
         @Override
         public void exit(Eyeball mob, Action action) {
-            ((StateTransitionActionWrapper<?>)action).resetAndSleep();
+            ((ActionWrapper)action).resetAndSleep();
         }
     };
 }

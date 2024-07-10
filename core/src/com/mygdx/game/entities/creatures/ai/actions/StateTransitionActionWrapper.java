@@ -1,12 +1,12 @@
 package com.mygdx.game.entities.creatures.ai.actions;
 
 import com.mygdx.game.entities.creatures.Mob;
+import com.mygdx.game.entities.creatures.ai.ActionStatus;
 import com.mygdx.game.entities.creatures.ai.MobAI;
 import com.mygdx.game.entities.creatures.ai.state.State;
 
-public class StateTransitionActionWrapper<S extends Enum<S> & State<?, S>> extends BehaviorTreeAction {
+public class StateTransitionActionWrapper<S extends Enum<S> & State<?, S>> extends ActionWrapper {
 
-    private final BehaviorTreeAction wrapped;
 
     // Utilized for the state transition
     MobAI<?, S> ai;
@@ -14,8 +14,7 @@ public class StateTransitionActionWrapper<S extends Enum<S> & State<?, S>> exten
     int statePriority;
 
     public StateTransitionActionWrapper(Mob mob, MobAI<?, S> ai, S state, int statePriority, BehaviorTreeAction wrapped) {
-        super(mob);
-        this.wrapped = wrapped;
+        super(mob, wrapped);
         this.ai = ai;
         this.state = state;
         this.statePriority = statePriority;
@@ -26,28 +25,12 @@ public class StateTransitionActionWrapper<S extends Enum<S> & State<?, S>> exten
         wrapped.update(delta);
         if (wrapped.isEnded()) {
             ai.changeState(state, statePriority);
-            end(true);
+            end(wrapped.getStatus() == ActionStatus.SUCCESS);
         }
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        wrapped.start();
-    }
-
-    @Override
-    public void resetAndSleep() {
-        super.resetAndSleep();
-        wrapped.resetAndSleep();
     }
 
     public void setNextState(S state, int statePriority) {
         this.state = state;
         this.statePriority = statePriority;
-    }
-
-    public BehaviorTreeAction getWrapped() {
-        return wrapped;
     }
 }
