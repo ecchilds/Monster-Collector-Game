@@ -13,13 +13,17 @@ import com.mygdx.game.control.Keyboard;
 import com.mygdx.game.entities.Entity;
 import com.mygdx.game.entities.ItemEntity;
 import com.mygdx.game.entities.utils.MessageTypes;
+import com.mygdx.game.items.Inventory;
+import com.mygdx.game.items.ItemStack;
 import com.mygdx.game.items.Items;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Player extends Creature {
 
     private final CharacterController controller;
+    private final Inventory inventory = new Inventory(List.of(new ItemStack(Items.APPLE, 3)));
 
     public Player(World world, float x, float y) {
         super("hoodie", world, x, y, 0.25f, 1f, 0.5f);
@@ -29,7 +33,7 @@ public class Player extends Creature {
         body.setLinearDamping(getDefaultDamping());
         setImpulseSpeed(0.15f);
 
-        addCollisionListener(ItemEntity.class, (Entity target) -> ((ItemEntity)target).pickUp());
+        addCollisionListener(ItemEntity.class, (Entity target) -> ((ItemEntity)target).pickUpToInventory(inventory));
 
         // Initialize all animations
         putIdleSprite(Direction.DOWN, "hoodie-idle-down.png");
@@ -86,7 +90,7 @@ public class Player extends Creature {
     }
 
     public boolean handleKeyRelease(int keyCode) {
-        if (keyCode == Input.Keys.P) {
+        if (keyCode == Input.Keys.P && inventory.removeItem(Items.APPLE)) {
             Vector2 playerPos = body.getPosition();
             Vector2 facingVector = Objects.requireNonNull(facing.toVector());
             ItemEntity apple = GameWorld.getCurrentRoom().spawnNewItem(Items.APPLE,

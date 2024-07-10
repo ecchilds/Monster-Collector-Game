@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.game.Config;
 import com.mygdx.game.GameWorld;
 import com.mygdx.game.entities.utils.FixtureBuilder;
+import com.mygdx.game.items.Inventory;
 import com.mygdx.game.items.Item;
 
 public class ItemEntity extends Entity {
@@ -44,6 +45,12 @@ public class ItemEntity extends Entity {
     public void pickUp() {
         GameWorld.getRoom(roomName).deSpawn(this);
         dispose();
+    }
+
+    public void pickUpToInventory(Inventory inventory) {
+        if (inventory.addItem(item)) {
+            pickUp();
+        }
     }
 
     @Override
