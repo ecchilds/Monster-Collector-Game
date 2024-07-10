@@ -163,7 +163,8 @@ public class Room {
 
     public <T extends Creature> T spawnNewCreature(CreatureConstructor<World, T> constructor, float x, float y) {
         T creature = constructor.apply(world, x / Config.PIXELS_PER_METER + 0.5f, y / Config.PIXELS_PER_METER + 0.5f);
-        this.visibleEntities.add(creature);
+        visibleEntities.add(creature);
+        creature.setExisting(true);
         return creature;
     }
 
@@ -174,7 +175,8 @@ public class Room {
 
     public <T extends Item> T spawnNewItem(ItemConstructor<T> constructor, float x, float y, Vector2 initialVelocity) {
         T item = constructor.build(mapName, world, x, y, initialVelocity);
-        this.visibleEntities.add(item);
+        visibleEntities.add(item);
+        item.setExisting(true);
         return item;
     }
 
@@ -188,12 +190,14 @@ public class Room {
     public <T extends Creature> void spawn(T creature, String spawnPointName) {
         MapProperties props = map.getLayers().get(SPAWNPOINT_LAYER).getObjects().get(spawnPointName).getProperties();
         creature.moveToRoom(this, props.get("x", float.class) / Config.PIXELS_PER_METER + .5f, props.get("y", float.class) / Config.PIXELS_PER_METER + .5f);
-        this.visibleEntities.add(creature);
+        visibleEntities.add(creature);
+        creature.setExisting(true);
     }
 
     public void deSpawn(VisibleEntity entity) {
         if(visibleEntities.contains(entity)) {
             visibleEntities.remove(entity);
+            entity.setExisting(false);
             toBeDestroyed.add(entity.getBody());
         }
     }

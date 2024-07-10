@@ -12,7 +12,9 @@ public abstract class Entity {
     protected final BodyDef.BodyType bodyType;
     protected float impulseSpeed;
 
-    final Map<Class<?>, EntityCollisionListener> collisionListeners = new ConcurrentHashMap<>();
+    private boolean existing = false;
+
+    private final Map<Class<?>, EntityCollisionListener> collisionListeners = new ConcurrentHashMap<>();
 
     public Entity(World world) {
         this(world, 0,0);
@@ -69,5 +71,13 @@ public abstract class Entity {
 
     public float getY() {
         return body.getPosition().y;
+    }
+
+    public boolean isExisting() {
+        return existing;
+    }
+
+    public void setExisting(boolean existing) {
+        this.existing = existing;
     }
 }
