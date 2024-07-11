@@ -108,4 +108,8 @@ public class Player extends Creature {
     public CharacterController getController() {
         return controller;
     }
+
+    public Inventory getInventory() {
+        return inventory;
+    }
 }

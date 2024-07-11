@@ -47,8 +47,6 @@ public class WindowModal extends Window {
 
         row();
 
-        setTestText(new Label("Inventory", skin, "mainFont", Color.WHITE));
-
         setWidth(200);
 
         setModal(true);

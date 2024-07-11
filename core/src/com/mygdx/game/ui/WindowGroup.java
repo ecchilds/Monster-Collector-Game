@@ -4,12 +4,18 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
+
 public class WindowGroup extends WidgetGroup {
 
     private final Skin skin;
     private final String styleName;
 
     private WindowModal testWindow = null;
+
+    private final Map<Class<? extends WindowModal>, WindowModal> windows = new ConcurrentHashMap<>();
 
     public WindowGroup(Skin skin, String styleName) {
         this.skin = skin;
@@ -26,6 +32,25 @@ public class WindowGroup extends WidgetGroup {
         } else {
             testWindow.toggleVisible();
             testWindow.toFront();
+        }
+    }
+
+    @FunctionalInterface
+    public interface WindowModalConstructor {
+        WindowModal generate(String title, Skin skin, String styleName);
+    }
+
+    public <W extends WindowModal> void toggleWindow(Class<W> clazz, WindowModalConstructor constructor, String title) {
+        WindowModal windowModal = windows.get(clazz);
+        if (windowModal == null) {
+            windowModal = constructor.generate(title, skin, styleName);
+            addActor(windowModal);
+            windows.put(clazz, windowModal);
+            windowModal.setX(getWidth()/2 - windowModal.getWidth()/2);
+            windowModal.setY(getHeight()/2 - windowModal.getHeight()/2);
+        } else {
+            windowModal.toggleVisible();
+            windowModal.toFront();
         }
     }
 

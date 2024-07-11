@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.mygdx.game.entities.creatures.Player;
 import com.mygdx.game.ui.GameUI;
+import com.mygdx.game.ui.InventoryWindow;
 
 public class Keyboard implements CharacterController {
 
@@ -41,11 +42,13 @@ public class Keyboard implements CharacterController {
     public boolean keyUp(int keycode) {
         switch (keycode) {
             case (Input.Keys.I):
+                GameUI.getWindows().toggleWindow(InventoryWindow.class, (title, skin, styleName) -> new InventoryWindow(title, skin, styleName, player.getInventory()), "Inventory");
+                return true;
+            case (Input.Keys.T):
                 GameUI.getWindows().toggleTestWindow();
                 return true;
             case (Input.Keys.ESCAPE):
-                GameUI.getWindows().toggleUpperMostWindow();
-                return true;
+                return GameUI.getWindows().toggleUpperMostWindow();
             default:
                 return player.handleKeyRelease(keycode);
         }

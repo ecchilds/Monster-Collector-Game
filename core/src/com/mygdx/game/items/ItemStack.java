@@ -7,6 +7,8 @@ public class ItemStack {
     public ItemStack(Item item, int count) {
         this.item = item;
         this.count = count;
+
+        item.initialize();
     }
 
     public Item getItem() {
@@ -28,5 +30,9 @@ public class ItemStack {
             count = newValue;
             return 0;
         }
+    }
+
+    public void dispose() {
+        item.dispose();
     }
 }

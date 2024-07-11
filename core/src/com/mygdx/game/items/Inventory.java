@@ -9,6 +9,8 @@ public class Inventory {
     // Sorted alphabetically by item name to ease inventory rendering.
     private final SortedMap<String, ItemStack> items = new ConcurrentSkipListMap<>();
 
+    private boolean seenChange = false;
+
     public Inventory() {
     }
 
@@ -19,17 +21,24 @@ public class Inventory {
     }
 
     public boolean addItem(Item item) {
-        return items.computeIfAbsent(item.getName(), name -> new ItemStack(item, 0)).incrementCount(1) == 0;
+        if (items.computeIfAbsent(item.getName(), name -> new ItemStack(item, 0)).incrementCount(1) == 0) {
+            seenChange = true;
+            return true;
+        }
+        return false;
     }
 
     public boolean removeItem(Item item) {
         ItemStack toRemoveFrom = items.get(item.getName());
         if (toRemoveFrom != null && toRemoveFrom.getCount() > 0) {
-            toRemoveFrom.incrementCount(-1);
 
+            toRemoveFrom.incrementCount(-1);
             if (toRemoveFrom.getCount() == 0) {
+                toRemoveFrom.dispose();
                 items.remove(item.getName());
             }
+
+            seenChange = true;
 
             return true;
         } else {
@@ -50,5 +59,13 @@ public class Inventory {
 
     public Iterable<ItemStack> getItems() {
         return items.values();
+    }
+
+    public boolean isSeenChange() {
+        return seenChange;
+    }
+
+    public void setSeenChange(boolean seenChange) {
+        this.seenChange = seenChange;
     }
 }
